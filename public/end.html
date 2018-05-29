@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css">
+    <script src="/axios/dist/axios.min.js"></script>
+    <script src="art-template/lib/template-web.js"></script>
+</head>
+
+<body>
+    <div class="container">
+
+        <h1> 王者农药
+            <small>修改英雄</small>
+        </h1>
+        <form id="form">
+           
+            英雄名称:
+            
+        </form>
+    </div>
+    <script id="tmpl" type="text/template">
+        <input type="hidden" name="id" value="{{ id }}">
+        <input type="text" name="username" value="{{ username }}">
+            <br>
+             性别: 
+            <input type="radio" name="gender" value="男" {{ gender=='男'?'checked':'' }}> 男
+            <input type="radio" name="gender" value="女" {{ gender=='女'?'checked':''}}> 女
+            <div>
+                <input type="submit" value="修改" class="btn btn-success">
+            </div>
+    </script>
+
+    <script>
+       const search = new URLSearchParams(location.search);
+       const id = search.get('id');
+       axios.get('http://localhost:5000/api/getinfo?id='+id).then((results)=>{
+        //    console.log(results.data.message);
+           if(results.status == 200 && results.data.err_code == 0){
+            let html = template('tmpl',results.data.message[0]);
+            $('#form').html(html);
+           }
+       })
+      $('#form').on('submit',(e)=>{
+          e.preventDefault();
+
+          axios.post('http://localhost:5000/api/update',$('#form').serialize()).then((results)=>{
+              console.log(results);
+            //   if( results. ){}
+          })
+      })
+    </script>
+
+</body>
+
+</html>

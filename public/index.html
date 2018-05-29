@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <title>Document</title>
+    <script src="/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css">
+    <script src="/axios/dist/axios.min.js"></script>
+    <script src="art-template/lib/template-web.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>王者荣耀 <small>英雄管理器</small> </h1>
+        <div class="clearfix">
+            <a href="/add.html" class="btn btn-info pull-right">添加新英雄</a>
+        </div>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>编号</th>
+                    <th>名称</th>
+                    <th>姓别</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+        
+            </tbody>
+        </table>
+    </div>
+    <script>
+        let p = new Promise (function (resolve,reject) {
+             $.ajax({
+                url: 'http://localhost:5000/api/getheros',
+                type: 'get',
+                success: (data) => {
+                    resolve(data);
+                },
+                error:(err)=>{
+                    reject(err);
+                } 
+            })
+        })
+        p.then(function (res) {
+            // console.log(res)
+            let html = template('tmpl', res);
+            $('tbody').html(html);
+        })
+       
+        // axios('http://localhost:5000/api/getheros').then((results)=>{
+        //     console.log(results);
+        //     if (results.status == 200 && results.data.err_code ===0) {
+        //          let html = template('tmpl', results.data);
+        //         $('tbody').html(html);
+        //     }
+        // })
+    </script>
+    <script id="tmpl" type="text/template">
+                {{ each message }}
+                <tr>
+                    <td>{{ $value.id }}</td>
+                    <td>{{ $value.username }}</td>
+                    <td>{{ $value.gender }}</td>
+                    <td>{{$value.ctime}}</td>
+                    <td>
+                        <a href="look.html?id={{ $value.id }}" class=" btn btn-primary">查看</a>
+                        <a href="end.html?id={{ $value.id }}" class=" btn btn-success">编辑</a>
+                        <a class="btn btn-danger" id="del" data-id={{ $value.id }} >删除</a>
+                    </td>
+                </tr>    
+               {{ /each }}
+            </script>
+    <script>
+       $('tbody').on('click','#del',function () {
+           let id = $(this).attr('data-id');
+           alert(id);
+           axios.get('http://localhost:5000/api/delhero?id='+id).then(results=>{
+               console.log(results);
+                window.location.reload();
+           })
+       })
+    </script>
+</body>
+</html>

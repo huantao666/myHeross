@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css">
+    <script src="/axios/dist/axios.min.js"></script>
+    <script src="art-template/lib/template-web.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1> 王者农药
+            <small>查看英雄</small>
+        </h1>
+        <div class="inof">
+            
+        </div>
+    </div>
+    <script>
+        let seach = new URLSearchParams(location.search);
+        const id = seach.get('id');
+        axios.get('http://localhost:5000/api/getinfo?id='+id).then((results) => {
+            console.log(results);
+            if(results.status ==200& results.data.err_code === 0){
+                let html = template('tmpl', results.data.message[0]); 
+                $('.inof').html(html);
+            }
+        })
+    </script>
+    <script id="tmpl" type="text/template">
+        <p>姓名：{{ username }}</p>
+        <p>性别：{{ gender }}</p>
+        <p>创建时间：{{ ctime }}</p>
+    </script>
+</body>
+
+</html>

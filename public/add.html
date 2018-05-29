@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css">
+    <script src="/axios/dist/axios.min.js"></script>
+    <script src="art-template/lib/template-web.js"></script>
+</head>
+<body>      
+    <div class="container">
+
+        <h1> 王者农药 <small>添加英雄</small> </h1>
+        <form id="form">
+            <!-- username  gender -->
+        英雄名称: <input type="text" name="username" placeholder="请输入英雄名称"><br>
+        性别: 男 <input type="radio" name="gender" value="男"> 
+             女 <input type="radio" name="gender" value="女">
+            <div>
+                <input type="submit" value="添加" class="btn btn-success">
+            </div>
+        </form>
+    </div>
+    <script>
+        $('#form').on('submit',function (e) {
+            // 组织submit 默认的提交
+            e.preventDefault();
+            // serialize()就是序列化一个数组或者对象什么的 吧他变成字符串的形式
+            axios.post('http://localhost:5000/api/addheros',$('form').serialize())
+            .then(function (results) {
+                // console.log(results);
+                if(results.status==200&&results.data.err_code==0){
+                    location.href="/index.html";
+                }else{
+                    alert('失败');
+                }
+            })
+        })
+    </script>
+
+</body>
+</html>
